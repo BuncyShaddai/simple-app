@@ -112,4 +112,79 @@ const tipSplit: CalculatorDefinition = {
   },
 };
 
-export const financeCalculators: CalculatorDefinition[] = [loanEmi, compoundInterest, tipSplit];
+const savingsGoal: CalculatorDefinition = {
+  slug: "savings-goal",
+  title: "Savings Goal Calculator",
+  shortTitle: "Savings Goal",
+  description: "Find out how long it takes to hit a savings target.",
+  domain: "finance",
+  icon: "\u{1F3AF}",
+  fields: [
+    { id: "target", label: "Savings goal", type: "number", unit: "$", defaultValue: 10000, min: 0 },
+    { id: "contribution", label: "Monthly contribution", type: "number", unit: "$", defaultValue: 300, min: 0 },
+    { id: "rate", label: "Annual interest rate", type: "number", unit: "%", defaultValue: 4, min: 0, step: 0.1 },
+  ],
+  calculate: (v) => {
+    const target = toNumber(v.target);
+    const contribution = toNumber(v.contribution);
+    const rate = toNumber(v.rate);
+    if ([target, contribution, rate].some((n) => Number.isNaN(n)) || target <= 0 || contribution <= 0) {
+      return { error: "Enter a positive goal amount and monthly contribution." };
+    }
+    const monthlyRate = rate / 100 / 12;
+    const months =
+      monthlyRate === 0
+        ? target / contribution
+        : Math.log(1 + (target * monthlyRate) / contribution) / Math.log(1 + monthlyRate);
+    if (!Number.isFinite(months) || months < 0) {
+      return { error: "Goal isn't reachable with these inputs." };
+    }
+    return {
+      results: [
+        { label: "Time to reach goal", value: `${Math.ceil(months)}`, unit: "months", primary: true },
+        { label: "In years", value: (months / 12).toFixed(1), unit: "years" },
+      ],
+    };
+  },
+};
+
+const discount: CalculatorDefinition = {
+  slug: "discount",
+  title: "Discount Calculator",
+  shortTitle: "Discount",
+  description: "Work out the sale price after a discount (and tax).",
+  domain: "finance",
+  icon: "\u{1F3F7}\u{FE0F}",
+  fields: [
+    { id: "price", label: "Original price", type: "number", unit: "$", defaultValue: 80, min: 0 },
+    { id: "discount", label: "Discount", type: "number", unit: "%", defaultValue: 25, min: 0, max: 100 },
+    { id: "tax", label: "Sales tax", type: "number", unit: "%", defaultValue: 0, min: 0 },
+  ],
+  calculate: (v) => {
+    const price = toNumber(v.price);
+    const discountPct = toNumber(v.discount);
+    const taxPct = toNumber(v.tax);
+    if ([price, discountPct, taxPct].some((n) => Number.isNaN(n)) || price < 0) {
+      return { error: "Enter a valid price and discount." };
+    }
+    const discountAmount = price * (discountPct / 100);
+    const afterDiscount = price - discountAmount;
+    const tax = afterDiscount * (taxPct / 100);
+    const finalPrice = afterDiscount + tax;
+    return {
+      results: [
+        { label: "Final price", value: fmtCurrency(finalPrice), primary: true },
+        { label: "You save", value: fmtCurrency(discountAmount) },
+        { label: "Tax added", value: fmtCurrency(tax) },
+      ],
+    };
+  },
+};
+
+export const financeCalculators: CalculatorDefinition[] = [
+  loanEmi,
+  compoundInterest,
+  tipSplit,
+  savingsGoal,
+  discount,
+];

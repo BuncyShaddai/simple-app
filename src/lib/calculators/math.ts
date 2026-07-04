@@ -1,5 +1,5 @@
 import type { CalculatorDefinition } from "./types";
-import { fmtNumber, toNumber } from "./format";
+import { fmtNumber, parseNumberList, toNumber } from "./format";
 
 const percentageChange: CalculatorDefinition = {
   slug: "percentage-change",
@@ -134,4 +134,84 @@ const temperature: CalculatorDefinition = {
   },
 };
 
-export const mathCalculators: CalculatorDefinition[] = [percentageChange, quadratic, temperature];
+const averageMedian: CalculatorDefinition = {
+  slug: "average-median",
+  title: "Average / Median Calculator",
+  shortTitle: "Average & Median",
+  description: "Get the mean, median, min and max of a list of numbers.",
+  domain: "math",
+  icon: "\u{1F4CB}",
+  fields: [
+    {
+      id: "numbers",
+      label: "Numbers",
+      type: "textarea",
+      defaultValue: "4, 8, 15, 16, 23, 42",
+      helpText: "Comma-separated list of numbers",
+    },
+  ],
+  calculate: (v) => {
+    const numbers = parseNumberList(v.numbers);
+    if (numbers.length === 0 || numbers.some((n) => Number.isNaN(n))) {
+      return { error: "Enter a comma-separated list of numbers." };
+    }
+    const sorted = [...numbers].sort((a, b) => a - b);
+    const sum = numbers.reduce((acc, n) => acc + n, 0);
+    const mean = sum / numbers.length;
+    const mid = Math.floor(sorted.length / 2);
+    const median = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+    return {
+      results: [
+        { label: "Mean", value: fmtNumber(mean, 2), primary: true },
+        { label: "Median", value: fmtNumber(median, 2) },
+        { label: "Min", value: fmtNumber(sorted[0], 2) },
+        { label: "Max", value: fmtNumber(sorted[sorted.length - 1], 2) },
+      ],
+    };
+  },
+};
+
+function gcd(a: number, b: number): number {
+  let x = Math.abs(a);
+  let y = Math.abs(b);
+  while (y !== 0) {
+    [x, y] = [y, x % y];
+  }
+  return x;
+}
+
+const gcdLcm: CalculatorDefinition = {
+  slug: "gcd-lcm",
+  title: "GCD & LCM Calculator",
+  shortTitle: "GCD & LCM",
+  description: "Find the greatest common divisor and least common multiple.",
+  domain: "math",
+  icon: "\u{1F522}",
+  fields: [
+    { id: "a", label: "First integer", type: "number", defaultValue: 12, step: 1 },
+    { id: "b", label: "Second integer", type: "number", defaultValue: 18, step: 1 },
+  ],
+  calculate: (v) => {
+    const a = Math.round(toNumber(v.a));
+    const b = Math.round(toNumber(v.b));
+    if ([a, b].some((n) => Number.isNaN(n)) || (a === 0 && b === 0)) {
+      return { error: "Enter two integers, not both zero." };
+    }
+    const divisor = gcd(a, b);
+    const multiple = divisor === 0 ? 0 : Math.abs(a * b) / divisor;
+    return {
+      results: [
+        { label: "GCD", value: fmtNumber(divisor, 0), primary: true },
+        { label: "LCM", value: fmtNumber(multiple, 0) },
+      ],
+    };
+  },
+};
+
+export const mathCalculators: CalculatorDefinition[] = [
+  percentageChange,
+  quadratic,
+  temperature,
+  averageMedian,
+  gcdLcm,
+];

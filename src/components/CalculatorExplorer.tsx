@@ -18,7 +18,7 @@ export function CalculatorExplorer() {
         q === "" || c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
       return matchesDomain && matchesQuery;
     });
-  }, [calculators, query, activeDomain]);
+  }, [query, activeDomain]);
 
   return (
     <div className="flex flex-col gap-6">

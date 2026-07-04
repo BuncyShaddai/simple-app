@@ -1,5 +1,6 @@
 import type { CalculatorResult, DomainId } from "@/lib/calculators/types";
 import { accentClasses } from "@/lib/calculators/domains";
+import { CopyButton } from "./CopyButton";
 
 export function ResultsPanel({
   domain,
@@ -29,7 +30,10 @@ export function ResultsPanel({
         <div
           className={`relative overflow-hidden rounded-2xl border border-black/[.06] bg-gradient-to-br ${accent.glow} to-transparent p-6 dark:border-white/[.08]`}
         >
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{primary.label}</p>
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{primary.label}</p>
+            <CopyButton value={`${primary.value}${primary.unit ? ` ${primary.unit}` : ""}`} />
+          </div>
           <p className="mt-1 text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             {primary.value}
             {primary.unit ? <span className="ml-1 text-lg text-zinc-500 dark:text-zinc-400">{primary.unit}</span> : null}

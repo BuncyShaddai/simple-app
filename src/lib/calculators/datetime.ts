@@ -106,4 +106,75 @@ const countdown: CalculatorDefinition = {
   },
 };
 
-export const datetimeCalculators: CalculatorDefinition[] = [ageCalculator, dateDifference, countdown];
+const workDays: CalculatorDefinition = {
+  slug: "work-days",
+  title: "Work Days Calculator",
+  shortTitle: "Work Days",
+  description: "Count business days between two dates, excluding weekends.",
+  domain: "datetime",
+  icon: "\u{1F4BC}",
+  fields: [
+    { id: "start", label: "Start date", type: "date" },
+    { id: "end", label: "End date", type: "date" },
+  ],
+  calculate: (v) => {
+    const start = parseDate(v.start);
+    const end = parseDate(v.end);
+    if (!start || !end) return { error: "Pick both a start and end date." };
+    if (end < start) return { error: "End date must be on or after the start date." };
+
+    let businessDays = 0;
+    const cursor = new Date(start);
+    while (cursor <= end) {
+      const day = cursor.getDay();
+      if (day !== 0 && day !== 6) businessDays += 1;
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    return {
+      results: [{ label: "Business days", value: fmtNumber(businessDays, 0), primary: true }],
+    };
+  },
+};
+
+function parseTime(value: number | string | undefined): number | null {
+  if (typeof value !== "string" || !value) return null;
+  const match = /^(\d{1,2}):(\d{2})$/.exec(value);
+  if (!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (hours > 23 || minutes > 59) return null;
+  return hours * 60 + minutes;
+}
+
+const timeDuration: CalculatorDefinition = {
+  slug: "time-duration",
+  title: "Time Duration Calculator",
+  shortTitle: "Time Duration",
+  description: "Find the elapsed time between a start and end time.",
+  domain: "datetime",
+  icon: "\u{23F1}\u{FE0F}",
+  fields: [
+    { id: "start", label: "Start time", type: "time" },
+    { id: "end", label: "End time", type: "time" },
+  ],
+  calculate: (v) => {
+    const start = parseTime(v.start);
+    const end = parseTime(v.end);
+    if (start === null || end === null) return { error: "Pick both a start and end time." };
+    const diff = (end - start + 24 * 60) % (24 * 60);
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
+    return {
+      results: [{ label: "Elapsed time", value: `${hours}h ${minutes}m`, primary: true }],
+    };
+  },
+};
+
+export const datetimeCalculators: CalculatorDefinition[] = [
+  ageCalculator,
+  dateDifference,
+  countdown,
+  workDays,
+  timeDuration,
+];

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getAllSlugs, getCalculatorBySlug } from "@/lib/calculators/registry";
@@ -57,7 +58,9 @@ export default async function CalculatorPage({
       </div>
 
       <div className="mt-8">
-        <CalculatorForm slug={calculator.slug} />
+        <Suspense fallback={<div className="h-64 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />}>
+          <CalculatorForm slug={calculator.slug} />
+        </Suspense>
       </div>
     </div>
   );

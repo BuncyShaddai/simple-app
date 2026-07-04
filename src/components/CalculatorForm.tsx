@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getCalculatorBySlug } from "@/lib/calculators/registry";
 import { accentClasses } from "@/lib/calculators/domains";
 import type { CalculatorValues } from "@/lib/calculators/types";
@@ -8,19 +9,37 @@ import { ResultsPanel } from "./ResultsPanel";
 
 export function CalculatorForm({ slug }: { slug: string }) {
   const calculator = getCalculatorBySlug(slug);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const initialValues = useMemo<CalculatorValues>(() => {
-    if (!calculator) return {};
-    const values: CalculatorValues = {};
+  const [values, setValues] = useState<CalculatorValues>(() => {
+    const initial: CalculatorValues = {};
+    if (!calculator) return initial;
     for (const field of calculator.fields) {
-      if (field.defaultValue !== undefined) values[field.id] = field.defaultValue;
+      const fromUrl = searchParams.get(field.id);
+      if (fromUrl !== null) initial[field.id] = fromUrl;
+      else if (field.defaultValue !== undefined) initial[field.id] = field.defaultValue;
     }
-    return values;
-  }, [calculator]);
-
-  const [values, setValues] = useState<CalculatorValues>(initialValues);
+    return initial;
+  });
 
   const output = useMemo(() => calculator?.calculate(values), [calculator, values]);
+
+  useEffect(() => {
+    if (!calculator) return;
+    const params = new URLSearchParams(searchParams.toString());
+    for (const field of calculator.fields) {
+      const value = values[field.id];
+      if (value === undefined || value === "") params.delete(field.id);
+      else params.set(field.id, String(value));
+    }
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    // Intentionally omit `searchParams`: this should only react to the user changing
+    // field values, not to our own router.replace call above updating the URL.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values, calculator, pathname, router]);
 
   if (!calculator) return null;
 
@@ -51,6 +70,14 @@ export function CalculatorForm({ slug }: { slug: string }) {
                   </option>
                 ))}
               </select>
+            ) : field.type === "textarea" ? (
+              <textarea
+                value={String(values[field.id] ?? "")}
+                onChange={(e) => update(field.id, e.target.value)}
+                placeholder={field.placeholder}
+                rows={3}
+                className={`rounded-lg border border-black/[.1] bg-white px-3 py-2 outline-none focus:ring-2 dark:border-white/[.1] dark:bg-zinc-950 ${accent.ring}`}
+              />
             ) : (
               <input
                 type={field.type}

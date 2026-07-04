@@ -80,4 +80,60 @@ const kineticEnergy: CalculatorDefinition = {
   },
 };
 
-export const scienceCalculators: CalculatorDefinition[] = [ohmsLaw, speedDistanceTime, kineticEnergy];
+const freeFall: CalculatorDefinition = {
+  slug: "free-fall",
+  title: "Free Fall Calculator",
+  shortTitle: "Free Fall",
+  description: "Find fall time and impact velocity for a dropped object.",
+  domain: "science",
+  icon: "\u{1FAA8}",
+  fields: [{ id: "height", label: "Drop height", type: "number", unit: "m", defaultValue: 10, min: 0 }],
+  calculate: (v) => {
+    const height = toNumber(v.height);
+    if (Number.isNaN(height) || height < 0) return { error: "Enter a non-negative height." };
+    const g = 9.81;
+    const time = Math.sqrt((2 * height) / g);
+    const velocity = g * time;
+    return {
+      results: [
+        { label: "Fall time", value: fmtNumber(time, 2), unit: "s", primary: true },
+        { label: "Impact velocity", value: fmtNumber(velocity, 2), unit: "m/s" },
+      ],
+    };
+  },
+};
+
+const pressure: CalculatorDefinition = {
+  slug: "pressure",
+  title: "Pressure Calculator",
+  shortTitle: "Pressure",
+  description: "Calculate pressure from an applied force and area.",
+  domain: "science",
+  icon: "\u{1F4A2}",
+  fields: [
+    { id: "force", label: "Force", type: "number", unit: "N", defaultValue: 500, min: 0 },
+    { id: "area", label: "Area", type: "number", unit: "m²", defaultValue: 2, min: 0, step: 0.01 },
+  ],
+  calculate: (v) => {
+    const force = toNumber(v.force);
+    const area = toNumber(v.area);
+    if ([force, area].some((n) => Number.isNaN(n)) || area <= 0) {
+      return { error: "Enter a force and an area greater than 0." };
+    }
+    const pascals = force / area;
+    return {
+      results: [
+        { label: "Pressure", value: fmtNumber(pascals, 2), unit: "Pa", primary: true },
+        { label: "In kilopascals", value: fmtNumber(pascals / 1000, 3), unit: "kPa" },
+      ],
+    };
+  },
+};
+
+export const scienceCalculators: CalculatorDefinition[] = [
+  ohmsLaw,
+  speedDistanceTime,
+  kineticEnergy,
+  freeFall,
+  pressure,
+];

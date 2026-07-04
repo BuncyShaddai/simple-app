@@ -130,4 +130,96 @@ const waterIntake: CalculatorDefinition = {
   },
 };
 
-export const healthCalculators: CalculatorDefinition[] = [bmi, bmr, waterIntake];
+const bodyFat: CalculatorDefinition = {
+  slug: "body-fat",
+  title: "Body Fat % Calculator",
+  shortTitle: "Body Fat %",
+  description: "Estimate body fat percentage using the U.S. Navy method.",
+  domain: "health",
+  icon: "\u{1F4CF}",
+  fields: [
+    {
+      id: "sex",
+      label: "Sex",
+      type: "select",
+      defaultValue: "female",
+      options: [
+        { label: "Female", value: "female" },
+        { label: "Male", value: "male" },
+      ],
+    },
+    { id: "height", label: "Height", type: "number", unit: "cm", defaultValue: 165, min: 0 },
+    { id: "waist", label: "Waist circumference", type: "number", unit: "cm", defaultValue: 80, min: 0 },
+    { id: "neck", label: "Neck circumference", type: "number", unit: "cm", defaultValue: 34, min: 0 },
+    {
+      id: "hip",
+      label: "Hip circumference",
+      type: "number",
+      unit: "cm",
+      defaultValue: 95,
+      min: 0,
+      helpText: "Only used for female calculations",
+    },
+  ],
+  calculate: (v) => {
+    const height = toNumber(v.height);
+    const waist = toNumber(v.waist);
+    const neck = toNumber(v.neck);
+    const hip = toNumber(v.hip);
+    const isFemale = v.sex === "female";
+    if ([height, waist, neck, hip].some((n) => Number.isNaN(n)) || height <= 0 || waist <= 0 || neck <= 0) {
+      return { error: "Fill in height, waist and neck with positive numbers." };
+    }
+    const bodyFatPct = isFemale
+      ? 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.221 * Math.log10(height)) - 450
+      : 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+    if (!Number.isFinite(bodyFatPct)) {
+      return { error: "Measurements don't produce a valid result — double-check them." };
+    }
+    return {
+      results: [{ label: "Estimated body fat", value: fmtNumber(bodyFatPct, 1), unit: "%", primary: true }],
+    };
+  },
+};
+
+const idealWeight: CalculatorDefinition = {
+  slug: "ideal-weight",
+  title: "Ideal Weight Calculator",
+  shortTitle: "Ideal Weight",
+  description: "A healthy weight range estimate using the Devine formula.",
+  domain: "health",
+  icon: "\u{1F3AF}",
+  fields: [
+    {
+      id: "sex",
+      label: "Sex",
+      type: "select",
+      defaultValue: "female",
+      options: [
+        { label: "Female", value: "female" },
+        { label: "Male", value: "male" },
+      ],
+    },
+    { id: "height", label: "Height", type: "number", unit: "cm", defaultValue: 165, min: 0 },
+  ],
+  calculate: (v) => {
+    const height = toNumber(v.height);
+    if (Number.isNaN(height) || height <= 0) return { error: "Enter a positive height." };
+    const heightInches = height / 2.54;
+    const inchesOver5ft = Math.max(0, heightInches - 60);
+    const base = v.sex === "male" ? 50 : 45.5;
+    const ideal = base + 2.3 * inchesOver5ft;
+    return {
+      results: [
+        { label: "Ideal weight", value: fmtNumber(ideal, 1), unit: "kg", primary: true },
+        {
+          label: "Healthy range",
+          value: `${fmtNumber(ideal * 0.9, 1)} – ${fmtNumber(ideal * 1.1, 1)}`,
+          unit: "kg",
+        },
+      ],
+    };
+  },
+};
+
+export const healthCalculators: CalculatorDefinition[] = [bmi, bmr, waterIntake, bodyFat, idealWeight];

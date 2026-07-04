@@ -20,3 +20,12 @@ export function toNumber(value: number | string | undefined): number {
   if (typeof value === "string" && value.trim() !== "") return Number(value);
   return NaN;
 }
+
+export function parseNumberList(value: number | string | undefined): number[] {
+  if (typeof value !== "string") return [];
+  return value
+    .split(",")
+    .map((part) => part.trim())
+    .filter((part) => part !== "")
+    .map(Number);
+}

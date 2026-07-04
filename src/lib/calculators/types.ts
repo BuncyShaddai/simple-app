@@ -7,7 +7,7 @@ export interface Domain {
   icon: string;
 }
 
-export type FieldType = "number" | "select" | "date";
+export type FieldType = "number" | "select" | "date" | "time" | "textarea";
 
 export interface SelectOption {
   label: string;
