@@ -15,6 +15,7 @@ const bmi: CalculatorDefinition = {
   description: "Body mass index from your height and weight.",
   domain: "health",
   icon: "\u{2696}\u{FE0F}",
+  formula: "BMI = weight (kg) ÷ height (m)².",
   fields: [
     { id: "weight", label: "Weight", type: "number", unit: "kg", defaultValue: 70, min: 0 },
     { id: "height", label: "Height", type: "number", unit: "cm", defaultValue: 175, min: 0 },
@@ -43,6 +44,8 @@ const bmr: CalculatorDefinition = {
   description: "Estimate BMR and daily calorie needs (Mifflin-St Jeor).",
   domain: "health",
   icon: "\u{1F525}",
+  formula:
+    "Mifflin-St Jeor: BMR = 10×weight + 6.25×height − 5×age + 5 (male) or − 161 (female). TDEE = BMR × activity multiplier.",
   fields: [
     {
       id: "sex",
@@ -98,6 +101,7 @@ const waterIntake: CalculatorDefinition = {
   description: "A quick estimate of daily hydration needs.",
   domain: "health",
   icon: "\u{1F4A7}",
+  formula: "Baseline = weight (kg) × 33 mL, plus an allowance based on daily exercise duration.",
   fields: [
     { id: "weight", label: "Weight", type: "number", unit: "kg", defaultValue: 70, min: 0 },
     {
@@ -137,6 +141,8 @@ const bodyFat: CalculatorDefinition = {
   description: "Estimate body fat percentage using the U.S. Navy method.",
   domain: "health",
   icon: "\u{1F4CF}",
+  formula:
+    "U.S. Navy method: a log10-based formula over waist, neck, height (and hip for women) circumference measurements, fitted separately for men and women.",
   fields: [
     {
       id: "sex",
@@ -189,6 +195,7 @@ const idealWeight: CalculatorDefinition = {
   description: "A healthy weight range estimate using the Devine formula.",
   domain: "health",
   icon: "\u{1F3AF}",
+  formula: "Devine formula: 50 kg (men) or 45.5 kg (women), plus 2.3 kg for every inch of height over 5 feet.",
   fields: [
     {
       id: "sex",

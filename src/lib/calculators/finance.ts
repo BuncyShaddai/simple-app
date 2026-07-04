@@ -8,6 +8,8 @@ const loanEmi: CalculatorDefinition = {
   description: "Estimate your monthly loan payment and total interest.",
   domain: "finance",
   icon: "\u{1F3E6}",
+  formula:
+    "EMI = P × r × (1+r)ⁿ ÷ ((1+r)ⁿ − 1), where P is the principal, r is the monthly interest rate, and n is the number of monthly payments.",
   fields: [
     { id: "principal", label: "Loan amount", type: "number", unit: "$", defaultValue: 20000, min: 0 },
     { id: "rate", label: "Annual interest rate", type: "number", unit: "%", defaultValue: 6.5, min: 0, step: 0.1 },
@@ -45,6 +47,7 @@ const compoundInterest: CalculatorDefinition = {
   description: "See how savings grow with compounding over time.",
   domain: "finance",
   icon: "\u{1F4C8}",
+  formula: "A = P × (1 + r/n)^(n×t), where P is the principal, r is the annual rate, n is compounds per year, and t is years.",
   fields: [
     { id: "principal", label: "Starting amount", type: "number", unit: "$", defaultValue: 5000, min: 0 },
     { id: "rate", label: "Annual interest rate", type: "number", unit: "%", defaultValue: 5, min: 0, step: 0.1 },
@@ -88,6 +91,7 @@ const tipSplit: CalculatorDefinition = {
   description: "Work out the tip and split the bill between friends.",
   domain: "finance",
   icon: "\u{1F9FE}",
+  formula: "Tip = Bill × (Tip% ÷ 100); Total = Bill + Tip; Per person = Total ÷ number of people.",
   fields: [
     { id: "bill", label: "Bill amount", type: "number", unit: "$", defaultValue: 60, min: 0 },
     { id: "tip", label: "Tip", type: "number", unit: "%", defaultValue: 18, min: 0, step: 1 },
@@ -119,6 +123,8 @@ const savingsGoal: CalculatorDefinition = {
   description: "Find out how long it takes to hit a savings target.",
   domain: "finance",
   icon: "\u{1F3AF}",
+  formula:
+    "Solves for n (months) in FV = C × ((1+r)ⁿ − 1) ÷ r, given a target future value FV, monthly contribution C, and monthly interest rate r.",
   fields: [
     { id: "target", label: "Savings goal", type: "number", unit: "$", defaultValue: 10000, min: 0 },
     { id: "contribution", label: "Monthly contribution", type: "number", unit: "$", defaultValue: 300, min: 0 },
@@ -155,6 +161,7 @@ const discount: CalculatorDefinition = {
   description: "Work out the sale price after a discount (and tax).",
   domain: "finance",
   icon: "\u{1F3F7}\u{FE0F}",
+  formula: "Sale price = Price × (1 − Discount% ÷ 100) × (1 + Tax% ÷ 100).",
   fields: [
     { id: "price", label: "Original price", type: "number", unit: "$", defaultValue: 80, min: 0 },
     { id: "discount", label: "Discount", type: "number", unit: "%", defaultValue: 25, min: 0, max: 100 },

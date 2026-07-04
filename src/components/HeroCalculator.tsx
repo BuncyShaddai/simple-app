@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { evaluateExpression } from "@/lib/calculators/expression";
 import { fmtNumber } from "@/lib/calculators/format";
+import { useCalculatorHistory } from "@/lib/hooks/useCalculatorHistory";
 import { CopyButton } from "./CopyButton";
 
 interface ButtonSpec {
@@ -68,7 +69,7 @@ export function HeroCalculator() {
 
   const [mode, setMode] = useState<"basic" | "scientific">("basic");
   const [expression, setExpression] = useState(() => searchParams.get("calc") ?? "");
-  const [history, setHistory] = useState<{ expr: string; result: string }[]>([]);
+  const { history, addEntry } = useCalculatorHistory();
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -106,12 +107,12 @@ export function HeroCalculator() {
       if (!prev.trim()) return prev;
       const result = evaluateExpression(prev);
       if ("value" in result) {
-        setHistory((h) => [{ expr: prev, result: fmtNumber(result.value, 8) }, ...h].slice(0, 5));
+        addEntry({ expr: prev, result: fmtNumber(result.value, 8) });
         return String(result.value);
       }
       return prev;
     });
-  }, []);
+  }, [addEntry]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {

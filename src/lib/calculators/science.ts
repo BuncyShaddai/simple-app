@@ -8,6 +8,7 @@ const ohmsLaw: CalculatorDefinition = {
   description: "Find current and power from voltage and resistance.",
   domain: "science",
   icon: "\u{26A1}",
+  formula: "Ohm's law: I = V ÷ R. Power: P = V × I.",
   fields: [
     { id: "voltage", label: "Voltage", type: "number", unit: "V", defaultValue: 12, min: 0 },
     { id: "resistance", label: "Resistance", type: "number", unit: "Ω", defaultValue: 100, min: 0 },
@@ -36,6 +37,7 @@ const speedDistanceTime: CalculatorDefinition = {
   description: "Work out average speed from distance and time travelled.",
   domain: "science",
   icon: "\u{1F3CE}\u{FE0F}",
+  formula: "Speed = Distance ÷ Time.",
   fields: [
     { id: "distance", label: "Distance", type: "number", unit: "km", defaultValue: 100, min: 0 },
     { id: "time", label: "Time", type: "number", unit: "hours", defaultValue: 1.5, min: 0, step: 0.1 },
@@ -63,6 +65,7 @@ const kineticEnergy: CalculatorDefinition = {
   description: "Calculate kinetic energy from mass and velocity.",
   domain: "science",
   icon: "\u{1F680}",
+  formula: "KE = ½ × m × v².",
   fields: [
     { id: "mass", label: "Mass", type: "number", unit: "kg", defaultValue: 1000, min: 0 },
     { id: "velocity", label: "Velocity", type: "number", unit: "m/s", defaultValue: 20, min: 0 },
@@ -87,6 +90,7 @@ const freeFall: CalculatorDefinition = {
   description: "Find fall time and impact velocity for a dropped object.",
   domain: "science",
   icon: "\u{1FAA8}",
+  formula: "Fall time: t = √(2h ÷ g). Impact velocity: v = g × t, with g = 9.81 m/s².",
   fields: [{ id: "height", label: "Drop height", type: "number", unit: "m", defaultValue: 10, min: 0 }],
   calculate: (v) => {
     const height = toNumber(v.height);
@@ -110,6 +114,7 @@ const pressure: CalculatorDefinition = {
   description: "Calculate pressure from an applied force and area.",
   domain: "science",
   icon: "\u{1F4A2}",
+  formula: "Pressure = Force ÷ Area (Pascals).",
   fields: [
     { id: "force", label: "Force", type: "number", unit: "N", defaultValue: 500, min: 0 },
     { id: "area", label: "Area", type: "number", unit: "m²", defaultValue: 2, min: 0, step: 0.01 },

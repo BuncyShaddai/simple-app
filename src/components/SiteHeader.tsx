@@ -5,7 +5,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-black/[.06] dark:border-white/[.08]">
+    <header className="border-b border-black/[.06] print:hidden dark:border-white/[.08]">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
           <span aria-hidden>🧮</span>

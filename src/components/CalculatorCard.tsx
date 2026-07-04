@@ -1,15 +1,35 @@
+"use client";
+
 import Link from "next/link";
 import type { CalculatorDefinition } from "@/lib/calculators/types";
 import { accentClasses, domainMap } from "@/lib/calculators/domains";
+import { useFavorites } from "@/lib/hooks/useFavorites";
 
 export function CalculatorCard({ calculator }: { calculator: CalculatorDefinition }) {
   const accent = accentClasses[calculator.domain];
   const domain = domainMap[calculator.domain];
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorite = isFavorite(calculator.slug);
+
   return (
     <Link
       href={`/calculators/${calculator.slug}`}
       className="group relative flex flex-col gap-2 rounded-2xl border border-black/[.06] bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/5 dark:border-white/[.08] dark:bg-zinc-900"
     >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleFavorite(calculator.slug);
+        }}
+        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+        aria-pressed={favorite}
+        className="absolute right-4 top-4 text-lg text-zinc-300 transition hover:text-amber-400 dark:text-zinc-600"
+      >
+        {favorite ? "★" : "☆"}
+      </button>
+
       <div className="flex items-center gap-3">
         <span className="text-2xl" aria-hidden>
           {calculator.icon}
@@ -18,7 +38,7 @@ export function CalculatorCard({ calculator }: { calculator: CalculatorDefinitio
           {domain.name}
         </span>
       </div>
-      <h3 className="font-semibold text-zinc-900 dark:text-zinc-50">{calculator.title}</h3>
+      <h3 className="pr-6 font-semibold text-zinc-900 dark:text-zinc-50">{calculator.title}</h3>
       <p className="text-sm text-zinc-500 dark:text-zinc-400">{calculator.description}</p>
       <span className="mt-2 text-sm font-medium text-zinc-900 group-hover:underline dark:text-zinc-50">
         Open calculator →

@@ -16,6 +16,7 @@ const ageCalculator: CalculatorDefinition = {
   description: "Find your exact age and days until your next birthday.",
   domain: "datetime",
   icon: "\u{1F382}",
+  formula: "Counts full years, months, and days between the birth date and today, carrying over for varying month lengths.",
   fields: [{ id: "birthdate", label: "Date of birth", type: "date" }],
   calculate: (v) => {
     const birth = parseDate(v.birthdate);
@@ -59,6 +60,7 @@ const dateDifference: CalculatorDefinition = {
   description: "Calculate the days, weeks and months between two dates.",
   domain: "datetime",
   icon: "\u{1F4C5}",
+  formula: "Total days = end date − start date, converted to weeks (÷7) and approximate months (÷30.44).",
   fields: [
     { id: "start", label: "Start date", type: "date" },
     { id: "end", label: "End date", type: "date" },
@@ -86,6 +88,7 @@ const countdown: CalculatorDefinition = {
   description: "See how many days remain until a target date.",
   domain: "datetime",
   icon: "\u{23F3}",
+  formula: "Days = target date − today, counted in calendar days.",
   fields: [{ id: "target", label: "Target date", type: "date" }],
   calculate: (v) => {
     const target = parseDate(v.target);
@@ -113,6 +116,7 @@ const workDays: CalculatorDefinition = {
   description: "Count business days between two dates, excluding weekends.",
   domain: "datetime",
   icon: "\u{1F4BC}",
+  formula: "Counts each calendar day from start to end (inclusive) that falls on a weekday (Mon–Fri).",
   fields: [
     { id: "start", label: "Start date", type: "date" },
     { id: "end", label: "End date", type: "date" },
@@ -154,6 +158,7 @@ const timeDuration: CalculatorDefinition = {
   description: "Find the elapsed time between a start and end time.",
   domain: "datetime",
   icon: "\u{23F1}\u{FE0F}",
+  formula: "Elapsed minutes = (end time − start time + 24h) mod 24h, then split into hours and minutes.",
   fields: [
     { id: "start", label: "Start time", type: "time" },
     { id: "end", label: "End time", type: "time" },

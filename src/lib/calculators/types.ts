@@ -48,4 +48,5 @@ export interface CalculatorDefinition {
   icon: string;
   fields: CalculatorField[];
   calculate: (values: CalculatorValues) => CalculateOutput;
+  formula?: string;
 }

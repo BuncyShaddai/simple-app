@@ -8,6 +8,7 @@ const percentageChange: CalculatorDefinition = {
   description: "Find the percentage increase or decrease between two values.",
   domain: "math",
   icon: "\u{1F4CA}",
+  formula: "% change = (New − Original) ÷ |Original| × 100.",
   fields: [
     { id: "from", label: "Original value", type: "number", defaultValue: 80, },
     { id: "to", label: "New value", type: "number", defaultValue: 100 },
@@ -36,6 +37,7 @@ const quadratic: CalculatorDefinition = {
   description: "Solve ax² + bx + c = 0 for real or complex roots.",
   domain: "math",
   icon: "\u{1F4D0}",
+  formula: "Roots of ax² + bx + c = 0 via x = (−b ± √(b² − 4ac)) ÷ 2a.",
   fields: [
     { id: "a", label: "a", type: "number", defaultValue: 1 },
     { id: "b", label: "b", type: "number", defaultValue: -3 },
@@ -94,6 +96,7 @@ const temperature: CalculatorDefinition = {
   description: "Convert between Celsius, Fahrenheit and Kelvin.",
   domain: "math",
   icon: "\u{1F321}\u{FE0F}",
+  formula: "°F = °C × 9/5 + 32; K = °C + 273.15 — converted through Celsius as the common base unit.",
   fields: [
     { id: "value", label: "Value", type: "number", defaultValue: 25 },
     {
@@ -141,6 +144,7 @@ const averageMedian: CalculatorDefinition = {
   description: "Get the mean, median, min and max of a list of numbers.",
   domain: "math",
   icon: "\u{1F4CB}",
+  formula: "Mean = sum of values ÷ count. Median = middle value of the sorted list (average of the two middle values if the count is even).",
   fields: [
     {
       id: "numbers",
@@ -187,6 +191,7 @@ const gcdLcm: CalculatorDefinition = {
   description: "Find the greatest common divisor and least common multiple.",
   domain: "math",
   icon: "\u{1F522}",
+  formula: "GCD via the Euclidean algorithm; LCM = |a × b| ÷ GCD(a, b).",
   fields: [
     { id: "a", label: "First integer", type: "number", defaultValue: 12, step: 1 },
     { id: "b", label: "Second integer", type: "number", defaultValue: 18, step: 1 },
