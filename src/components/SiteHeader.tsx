@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { calculators } from "@/lib/calculators/registry";
+import { domains } from "@/lib/calculators/domains";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function SiteHeader() {
   return (
@@ -8,9 +11,20 @@ export function SiteHeader() {
           <span aria-hidden>🧮</span>
           Calc Suite
         </Link>
-        <nav className="text-sm text-zinc-500 dark:text-zinc-400">
-          <span>15 calculators · 5 domains</span>
-        </nav>
+        <div className="flex items-center gap-4">
+          <nav className="hidden text-sm text-zinc-500 dark:text-zinc-400 sm:block">
+            <span>
+              {calculators.length} calculators · {domains.length} domains
+            </span>
+          </nav>
+          <Link
+            href="/roadmap"
+            className="text-sm font-medium text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            Roadmap
+          </Link>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
